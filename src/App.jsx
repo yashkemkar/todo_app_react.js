@@ -7,17 +7,11 @@ import { useState, useEffect } from 'react'
 
 function App() {
 
-  //We have to include some sample pre-loaded todos - these are stored in objects within an array. Where the first key-value pair is the actual todo and the second key-value pair is a status check.
-  // const todos = [
-  //   {input: 'Hello! Add your first todo!', complete: true},
-  //   {input: 'Get the groceries!', complete: true},
-  //   {input: 'Learn react', complete: true},
-  //   {input: 'Fight for Middle Earth!', complete: false}
-  // ]
-
   const [todos, setTodos] = useState([{ input: 'Hello! Add your first todo!', complete: true }])
 
   const [selectedTab, setSelectedTab] = useState('Open')
+
+  const [inputValue, setInputValue] = useState("")
 
   // create an add function
   function handleAddTodo(newTodo) {
@@ -35,6 +29,29 @@ function App() {
     setTodos(newTodoList) //overrided the original to match the new list
     handleSaveData(newTodoList)
   }
+
+  function handleEditTodo(index) {
+    // step 1 - create a duplicate array
+    let newTodoList = [...todos]
+
+    // step 2 - create a new variable and assign the current value of the todo that needs editing to it
+    let editToDo = newTodoList[index].input
+   
+    // step 3 - set the input value equal to the current value of the todo in question
+    setInputValue(editToDo)   
+
+    // step 4 - copy the delete functionality and filter out the todo @ index from the duplicate array
+    newTodoList = todos.filter((editTodo, valIndex) => {
+      return valIndex !== index
+    })
+
+    // step 5 - set the todo state equal to the filtered duplicate array
+    setTodos(newTodoList)
+
+    // step 6 - now the user can edit the todo and re-add it when satisfied
+    handleSaveData(newTodoList)
+  }
+
 
   function handleDeleteTodo(index) {
     let newTodoList = todos.filter((val, valIndex) => {
@@ -59,8 +76,8 @@ function App() {
     <>
       <Header todos={todos} />
       <Tabs selectedTab={selectedTab} setSelectedTab={setSelectedTab} todos={todos} />
-      <TodoList handleCompleteTodo={handleCompleteTodo} handleDeleteTodo={handleDeleteTodo} todos={todos} selectedTab={selectedTab}/>
-      <TodoInput handleAddTodo={handleAddTodo} />
+      <TodoList handleCompleteTodo={handleCompleteTodo} handleDeleteTodo={handleDeleteTodo} handleEditTodo={handleEditTodo} todos={todos} selectedTab={selectedTab} />
+      <TodoInput handleAddTodo={handleAddTodo} inputValue={inputValue} setInputValue={setInputValue}/>
     </>
   )
 }
