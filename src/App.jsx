@@ -52,7 +52,6 @@ function App() {
     handleSaveData(newTodoList)
   }
 
-
   function handleDeleteTodo(index) {
     let newTodoList = todos.filter((val, valIndex) => {
       return valIndex !== index
